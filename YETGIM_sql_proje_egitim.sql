@@ -1,6 +1,6 @@
       ---ÇALIŞMALARIN SONUCUNDA SON PROJE SORGULARIM---
 
---Çalışanların isim,soy isim,maaş,meslek ve %30 zamlı maaşlarını veren sorgu...
+--(WORD-1)Çalışanların isim,soy isim,maaş,meslek ve %30 zamlı maaşlarını veren sorgu...
 select e.first_name AS isim,
     e.last_name AS soy_isim,
     e.job_id AS meslek,
@@ -8,7 +8,7 @@ select e.first_name AS isim,
     (e.salary * 1.3) AS zamli_maas
 FROM hr.employees e;
 
---Çalışanların isim,soyisim,ülke,adres ve departmanlarını veren sorgu...
+--(WORD-2)Çalışanların isim,soyisim,ülke,adres ve departmanlarını veren sorgu...
 select e.first_name as isim,
 e.last_name as soy_isim,
 c.country_name as ulke,
@@ -19,7 +19,7 @@ left join HR.DEPARTMENTS d on e.DEPARTMENT_ID = d.DEPARTMENT_ID
 left join hr.LOCATIONS l on d.LOCATION_ID = l.LOCATION_ID 
 LEFT JOIN hr.countries c   ON l.country_id = c.country_id;
 
---(CTE Versiyon)Çalışanların isim,soyisim,ülke,adres ve departmanlarını veren sorgu...
+--(WORD-3)(CTE Versiyon)Çalışanların isim,soyisim,ülke,adres ve departmanlarını veren sorgu...
 WITH dept_bolge AS (
  select d.department_id,
         l.street_address,
@@ -40,7 +40,7 @@ left join dept_bolge cte
     ON e.department_id = cte.department_id;
 
 
---Çalışanın isim, soy isim, çalıştığı yıl sayısı, maaşı ve maaşın çalıştığı yıla oranını veren sorgu...
+--(WORD-4)Çalışanın isim, soy isim, çalıştığı yıl sayısı, maaşı ve maaşın çalıştığı yıla oranını veren sorgu...
 select e.first_name,
     e.last_name,
     TRUNC(MONTHS_BETWEEN(SYSDATE, e.hire_date) / 12) AS calistigi_yil,
@@ -49,7 +49,7 @@ select e.first_name,
 from hr.employees e;
 
 ---
--- Çalışanın isim, soy isim, maas, mesleki işe giriş, çalıştığı yıl, toplam ve ortalama kazancını veren sorgu...
+-- (WORD-5)Çalışanın isim, soy isim, maas, mesleki işe giriş, çalıştığı yıl, toplam ve ortalama kazancını veren sorgu...
 select e.first_name as isim,
     e.last_name as soy_isim,
     e.salary as maas,
@@ -76,7 +76,7 @@ order by
     toplam_kazanc DESC NULLS LAST;            
 
 
--- (CTE versiyonu)Çalışanın isim, soy isim, maas, mesleki işe giriş, çalıştığı yıl, toplam ve ortalama kazancını veren sorgu...
+-- (WORD-6)(CTE versiyonu)Çalışanın isim, soy isim, maas, mesleki işe giriş, çalıştığı yıl, toplam ve ortalama kazancını veren sorgu...
 WITH ort_maas AS (   -- Departmanların ortalama maaşlarını hesaplayan CTE...
  select d.department_id,
     ROUND(AVG(e.salary), 2) AS ortalama_maas
@@ -105,7 +105,7 @@ order by
     toplam_kazanc DESC NULLS LAST;
 
 
---Calisan ismi, mesleği, maasi, departmanı, ortalama maaşi ve performansını gösteren,departman ve maaşa göre sıralayan CTE srogu...
+--(WORD-7)Calisan ismi, mesleği, maasi, departmanı, ortalama maaşi ve performansını gösteren,departman ve maaşa göre sıralayan CTE srogu...
 WITH dept_avg AS (   
  select department_id,
   ROUND(AVG(salary),2) AS ortalama_maas
@@ -142,14 +142,14 @@ left join dept_avg da
 where e.salary <= da.ortalama_maas
 order BY departman, maas DESC;
 
---Çalışanların hiyerarşik levelini veren sorgu...
+--(WORD-8)Çalışanların hiyerarşik levelini veren sorgu...
 select employee_id, first_name as Calisan, manager_id, LEVEL
 from hr.EMPLOYEES
 start with manager_id is null
 connect by PRIOR employee_id = manager_id
 order by level desc;
 
---Çalişan önceki maaşı ile güncel maaşı arası farkı çeken sorgu --LAG ile çektik.
+--(WORD-9)Çalişan önceki maaşı ile güncel maaşı arası farkı çeken sorgu --LAG ile çektik.
 select first_name as calisan,
  employee_id,
  salary as maas,
@@ -158,7 +158,7 @@ select first_name as calisan,
 from hr.employees
 order BY department_id, hire_date;
 
---Çalışan ağacı sorgusu PATH, ceodan başlar, döngüye karşı koruma var.
+--(WORD-10)Çalışan ağacı sorgusu PATH, ceodan başlar, döngüye karşı koruma var.
 select employee_id,
  first_name,
  LEVEL AS seviye,
@@ -559,5 +559,6 @@ select employee_id,
 from hr.employees
 START WITH manager_id IS NULL          -- En üst yöneticiden başla (CEO)
 CONNECT BY NOCYCLE PRIOR employee_id = manager_id;  -- Döngüye karşı koruma
+
 
 ---Okuyana teşekkürler :D
